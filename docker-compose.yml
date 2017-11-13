@@ -46,3 +46,17 @@ services:
     image: redis:4.0.2
     ports:
       - 6379:6379
+
+### MySQL Container ##########################################
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: horizon
+      MYSQL_USER: jdoe
+      MYSQL_PASSWORD: secret
+    volumes:
+      - ./build/data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
