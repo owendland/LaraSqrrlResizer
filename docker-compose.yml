@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+### Application Containers ###################################
+
+  web:
+    image: us.gcr.io/sl-docker/stitch-nginx-php
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/code
+
+  worker:
+    image: laradock/workspace:1.9-71
+    command: "php /var/www/artisan horizon"
+    volumes:
+      - ./:/var/www
+
+  cli:
+    image: laradock/workspace:1.9-71
+    volumes:
+      - ./:/var/www
+
+### Cache Container #########################################
+
+  redis:
+    image: redis:4.0.2
+    ports:
+      - 6379:6379
