@@ -13,7 +13,8 @@
                         </div>
                     @endif
 
-                    <img src="{{ $source_url }}"/>
+                    <p>Source Url</p>
+                    <a href="{{ $source_url }}" style="text-overflow: ellipsis">{{ $source_url }}</a>
 
                     @foreach ($resized_urls as $name => $resized_url)
                         <p>{{$name}}</p>

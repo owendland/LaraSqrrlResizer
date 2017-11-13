@@ -37,17 +37,23 @@ class ImageController extends Controller
      */
     public function store(SubmitImageUrl $request)
     {
+        $source_url        = $request->get('image_url');
         $image             = new Image();
-        $image->source_url = $request->get('image_url');
+        $image->source_url = $source_url;
 
-        $image->resized_urls = [
-            'thumbnail' => [
-                'url' => $request->get('image_url'),
-            ],
-            'small'     => [
-                'url' => $request->get('image_url'),
-            ],
-        ];
+        $image->save();
+
+        $name          = 'thumbnail';
+        $resized_image = \Image::make($source_url)->resize(50, 50);
+        $resized_image->encode('jpg');
+
+        $resized_image_path = "public/{$image->id}/{$name}.jpg";
+
+        \Storage::put($resized_image_path, (string)$resized_image, 'public');
+
+        $resized_image_url = \Storage::url($resized_image_path);
+
+        array_set($image->resized_urls, "{$name}.url", $resized_image_url);
 
         $image->save();
 
