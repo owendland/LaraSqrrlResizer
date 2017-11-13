@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SubmitImageUrl;
 use App\Image;
 use Illuminate\Http\Request;
+use Image as ImageResize;
+use Storage;
 
 class ImageController extends Controller
 {
@@ -15,7 +17,9 @@ class ImageController extends Controller
      */
     public function index()
     {
-        //
+        $images = Image::paginate(3);
+
+        return view('image.index', ['images' => $images]);
     }
 
     /**
@@ -25,7 +29,7 @@ class ImageController extends Controller
      */
     public function create()
     {
-        //
+        return view('image.create');
     }
 
     /**
@@ -44,7 +48,7 @@ class ImageController extends Controller
         $image->save();
 
         $name          = 'thumbnail';
-        $resized_image = \Image::make($source_url)->resize(50, 50);
+        $resized_image = ImageResize::make($source_url)->resize(50, 50);
         $resized_image->encode('jpg');
 
         $resized_image_path = "public/{$image->id}/{$name}.jpg";
@@ -53,7 +57,11 @@ class ImageController extends Controller
 
         $resized_image_url = \Storage::url($resized_image_path);
 
-        array_set($image->resized_urls, "{$name}.url", $resized_image_url);
+        $resized_urls = (array)$image->resized_urls;
+        array_set($resized_urls, "{$name}.url", $resized_image_url);
+        array_set($resized_urls, "{$name}.path", $resized_image_path);
+
+        $image->resized_urls = $resized_urls;
 
         $image->save();
 
@@ -72,9 +80,7 @@ class ImageController extends Controller
         return view(
             'image.show',
             [
-                'id'           => $image->id,
-                'source_url'   => $image->source_url,
-                'resized_urls' => (array)$image->resized_urls,
+                'image' => $image,
             ]
         );
     }
@@ -113,6 +119,15 @@ class ImageController extends Controller
      */
     public function destroy(Image $image)
     {
-        //
+        foreach ((array)$image->resized_urls as $resized_url) {
+            $path = array_get($resized_url, 'path');
+            if (Storage::exists($path)) {
+                Storage::delete($path);
+            }
+        }
+
+        $image->delete();
+
+        return redirect()->route('image.index')->with('status', 'Image Deleted!');
     }
 }

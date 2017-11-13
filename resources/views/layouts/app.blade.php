@@ -36,7 +36,11 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        @guest
+                        @else
+                            <li><a href="{{ route('image.index') }}">Images</a></li>
+                            <li><a href="{{ route('image.create') }}">Add Image</a></li>
+                        @endguest
                     </ul>
 
                     <!-- Right Side Of Navbar -->
