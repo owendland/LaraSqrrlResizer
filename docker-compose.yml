@@ -18,7 +18,8 @@ services:
 
   worker:
     image: laradock/workspace:1.9-71
-    command: "php /var/www/code/artisan horizon"
+    command: "php artisan horizon"
+    working_dir: /var/www/code
     volumes:
       - ./:/var/www/code
     depends_on:
@@ -27,6 +28,7 @@ services:
   cli:
     image: laradock/workspace:1.9-71
     tty: true
+    working_dir: /var/www/code
     volumes:
       - ./:/var/www/code
     depends_on:

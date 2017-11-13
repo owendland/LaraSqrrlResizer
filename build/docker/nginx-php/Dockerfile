@@ -57,15 +57,16 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 #####################################
 
 # Add php-fpm config
-ADD build/docker/nginx-php/config/www.conf /etc/php/7.1/fpm/pool.d/www.conf
-ADD build/docker/nginx-php/config/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
+ADD build/docker/nginx-php/config/php-fpm/www.conf /etc/php/7.1/fpm/pool.d/www.conf
+ADD build/docker/nginx-php/config/php-fpm/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
+RUN rm /etc/php/7.1/fpm/conf.d/10-opcache.ini
 
 # Add nginx config
-ADD build/docker/nginx-php/config/nginx.conf /etc/nginx/
+ADD build/docker/nginx-php/config/nginx/nginx.conf /etc/nginx/
 ADD build/docker/nginx-php/sites-available/* /etc/nginx/conf.d/
 
 # Add supervisor config
-ADD build/docker/nginx-php/config/supervisor.conf /etc/supervisord.conf
+ADD build/docker/nginx-php/config/supervisor/supervisor.conf /etc/supervisord.conf
 
 # Make the folder that php-fpm will create the socket in
 RUN mkdir -p /var/run/php
@@ -74,5 +75,4 @@ WORKDIR /var/www/code
 
 EXPOSE 80
 
-#CMD ["cd ../ && /usr/bin/supervisord", "-n", "-c",  "/etc/supervisord.conf"]
 CMD cd ../ && /usr/bin/supervisord -n -c /etc/supervisord.conf
