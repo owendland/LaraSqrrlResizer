@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: horizon-demo-worker
+  labels:
+    name: horizon-demo-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: horizon-demo-worker
+  template:
+    metadata:
+      labels:
+        app: horizon-demo-worker
+    spec:
+      containers:
+        - image: gcr.io/horizon-demo-185900/horizon-demo-app:latest
+          name: horizon-demo-app
+          command: ["php", "artisan", "horizon"]
+          envFrom:
+          - configMapRef:
+              name: env-config

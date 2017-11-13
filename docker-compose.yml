@@ -5,22 +5,38 @@ services:
 ### Application Containers ###################################
 
   web:
-    image: us.gcr.io/sl-docker/stitch-nginx-php
+    image: gcr.io/horizon-demo-185900/nginx-php
+    build:
+      context: .
+      dockerfile: build/docker/nginx-php/Dockerfile
     ports:
       - 80:80
     volumes:
       - ./:/var/www/code
+    depends_on:
+      - redis
 
   worker:
     image: laradock/workspace:1.9-71
-    command: "php /var/www/artisan horizon"
+    command: "php /var/www/code/artisan horizon"
     volumes:
-      - ./:/var/www
+      - ./:/var/www/code
+    depends_on:
+      - redis
 
   cli:
     image: laradock/workspace:1.9-71
+    tty: true
     volumes:
-      - ./:/var/www
+      - ./:/var/www/code
+    depends_on:
+      - redis
+
+  artifact:
+    image: gcr.io/horizon-demo-185900/horizon-demo-app
+    build:
+      context: .
+      dockerfile: build/docker/artifact/Dockerfile
 
 ### Cache Container #########################################
 

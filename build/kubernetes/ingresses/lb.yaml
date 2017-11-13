@@ -1,0 +1,9 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: horizon-demo-lb
+  namespace: default
+spec:
+  backend:
+    serviceName: horizon-demo-web
+    servicePort: 80

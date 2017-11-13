@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: horizon-demo-web
+  labels:
+    name: horizon-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: horizon-demo-web
+  template:
+    metadata:
+      labels:
+        app: horizon-demo-web
+    spec:
+      containers:
+        - image: gcr.io/horizon-demo-185900/horizon-demo-app:latest
+          name: horizon-demo-app
+          ports:
+            - containerPort: 80
+          envFrom:
+          - configMapRef:
+              name: env-config
