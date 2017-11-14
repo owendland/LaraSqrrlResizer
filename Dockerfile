@@ -1,4 +1,4 @@
-FROM us.gcr.io/horizon-demo-185900/nginx-php
+FROM owendland/nginx-php-laravel:1.0
 
 USER root
 

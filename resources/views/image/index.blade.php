@@ -19,8 +19,8 @@
                     <a href="{{ route('image.show', ['image' => $image]) }}" class="list-group-item">
                         <ul class="list-inline">
                             <li>
-                                @if (array_get((array)$image->resized_urls, 'thumbnail'))
-                                    <img src="{{array_get($image->resized_urls, 'thumbnail.url')}}">
+                                @if (array_get((array)$image->resized_urls, 'square'))
+                                    <img src="{{array_get($image->resized_urls, 'square.url')}}">
                                 @endif
                             </li>
                             <li>
@@ -28,8 +28,12 @@
                             </li>
                             <li class="pull-right text-right">
                                 <span class="">
-                                    Image Sizes<br/>
-                                    {{implode(', ', array_keys((array)$image->resized_urls))}}
+                                    @if (array_get((array)$image->resized_urls, 'square'))
+                                        Image Sizes<br/>
+                                        {{implode(', ', array_keys((array)$image->resized_urls))}}
+                                    @else
+                                        Currently Resizing...
+                                    @endif
                                 </span>
                             </li>
                         </ul>

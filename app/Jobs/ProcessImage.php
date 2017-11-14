@@ -91,8 +91,7 @@ class ProcessImage implements ShouldQueue
         $resized_image = $image_manager->make($this->image->source_url)->fit($width, $height);
 
         // Grab the original image encoding and encode the resized image accordingly
-        $source_url_pieces = explode('.', $this->image->source_url);
-        $resized_image->encode(strtolower(last($source_url_pieces)));
+        $resized_image->encode($this->getImageFileType());
 
         return $this->saveResizedImage($name, (string)$resized_image);
     }
@@ -128,5 +127,20 @@ class ProcessImage implements ShouldQueue
         array_set($resized_urls, $name, $image_info);
 
         $this->image->resized_urls = $resized_urls;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getImageFileType(): string
+    {
+        $source_url_pieces = explode('.', $this->image->source_url);
+        $encoding          = strtolower(last($source_url_pieces));
+
+        if (strpos($encoding, '?')) {
+            $encoding = substr($encoding, 0, strpos($encoding, '?'));
+        }
+
+        return $encoding;
     }
 }

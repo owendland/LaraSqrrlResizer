@@ -5,16 +5,14 @@ services:
 ### Application Containers ###################################
 
   web:
-    image: gcr.io/horizon-demo-185900/nginx-php
-    build:
-      context: .
-      dockerfile: build/docker/nginx-php/Dockerfile
+    image: owendland/nginx-php-laravel:1.0
     ports:
       - 80:80
     volumes:
       - ./:/var/www/code
     depends_on:
       - redis
+      - mysql
 
   worker:
     image: laradock/workspace:1.9-71
@@ -24,6 +22,7 @@ services:
       - ./:/var/www/code
     depends_on:
       - redis
+      - mysql
 
   cli:
     image: laradock/workspace:1.9-71
@@ -33,12 +32,12 @@ services:
       - ./:/var/www/code
     depends_on:
       - redis
+      - mysql
 
   artifact:
     image: gcr.io/horizon-demo-185900/horizon-demo-app
     build:
       context: .
-      dockerfile: build/docker/artifact/Dockerfile
 
 ### Cache Container #########################################
 
