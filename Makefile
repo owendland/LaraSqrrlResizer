@@ -10,7 +10,7 @@ RESET  := $(shell tput -Txterm sgr0)
 HELP_FUN = \
 	%help; \
 	while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
-	print "Welcome to larasqrrl resizer!\n\n"; \
+	print "Welcome to Larasqrrl Resizer!\n\n"; \
 	print "usage: make [target]\n\n"; \
 	for (sort keys %help) { \
 	print "${WHITE}$$_:${RESET}\n"; \
