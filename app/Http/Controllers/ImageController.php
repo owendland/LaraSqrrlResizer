@@ -17,7 +17,7 @@ class ImageController extends Controller
      */
     public function index()
     {
-        $images = Image::paginate(3);
+        $images = Image::paginate(2);
 
         return view('image.index', ['images' => $images]);
     }

@@ -16,8 +16,24 @@
 
             <ul class="list-group">
                 @foreach ($images as $image)
-                    <a href="{{ route('image.show', ['image' => $image]) }}"
-                       class="list-group-item">{{ $image->source_url }}</a>
+                    <a href="{{ route('image.show', ['image' => $image]) }}" class="list-group-item">
+                        <ul class="list-inline">
+                            <li>
+                                @if (array_get((array)$image->resized_urls, 'thumbnail'))
+                                    <img src="{{array_get($image->resized_urls, 'thumbnail.url')}}">
+                                @endif
+                            </li>
+                            <li>
+                                <span>Squirrel #{{ $image->id }}</span>
+                            </li>
+                            <li class="pull-right text-right">
+                                <span class="">
+                                    Image Sizes<br/>
+                                    {{implode(', ', array_keys((array)$image->resized_urls))}}
+                                </span>
+                            </li>
+                        </ul>
+                    </a>
                 @endforeach
             </ul>
             <div class="text-center">
