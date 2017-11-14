@@ -39,7 +39,7 @@
                         @guest
                         @else
                             <li><a href="{{ route('image.index') }}">Images</a></li>
-                            <li><a href="{{ route('image.create') }}">Add Image</a></li>
+                            <li><a href="{{ route('image.create') }}">Resize Image</a></li>
                         @endguest
                     </ul>
 
