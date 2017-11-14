@@ -24,7 +24,8 @@ class SubmitImageUrl extends FormRequest
     public function rules()
     {
         return [
-            'image_url' => 'url'
+            'image_url' => 'required|url',
+            'name'      => 'nullable|string|between:1,255',
         ];
     }
 }

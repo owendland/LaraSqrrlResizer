@@ -11,12 +11,24 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get(
+    '/',
+    function () {
+        return view('welcome');
+    }
+);
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('image', ImageController::class);
+Route::resource(
+    'image',
+    ImageController::class,
+    [
+        'except' => [
+            'edit',
+            'update',
+        ],
+    ]
+);

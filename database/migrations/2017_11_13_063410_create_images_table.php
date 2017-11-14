@@ -15,6 +15,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->string('source_url');
             $table->json('resized_urls')->nullable();
             $table->timestamps();

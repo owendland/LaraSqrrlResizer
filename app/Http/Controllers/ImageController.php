@@ -4,12 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubmitImageUrl;
 use App\Image;
-use Illuminate\Http\Request;
-use Image as ImageResize;
+use App\Image\Repositories\ImageRepository;
 use Storage;
 
 class ImageController extends Controller
 {
+    /**
+     * @var \App\Image\Repositories\ImageRepository
+     */
+    protected $repository;
+
+    /**
+     * ImageController constructor.
+     *
+     * @param \App\Image\Repositories\ImageRepository $repository
+     */
+    public function __construct(ImageRepository $repository)
+    {
+        $this->repository = $repository;
+
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +35,12 @@ class ImageController extends Controller
     {
         $images = Image::paginate(2);
 
-        return view('image.index', ['images' => $images]);
+        return view(
+            'image.index',
+            [
+                'images' => $images,
+            ]
+        );
     }
 
     /**
@@ -41,31 +62,12 @@ class ImageController extends Controller
      */
     public function store(SubmitImageUrl $request)
     {
-        $source_url        = $request->get('image_url');
-        $image             = new Image();
-        $image->source_url = $source_url;
+        $this->repository->persist(
+            $request->get('image_url'),
+            $request->get('name')
+        );
 
-        $image->save();
-
-        $name          = 'thumbnail';
-        $resized_image = ImageResize::make($source_url)->resize(50, 50);
-        $resized_image->encode('jpg');
-
-        $resized_image_path = "public/{$image->id}/{$name}.jpg";
-
-        \Storage::put($resized_image_path, (string)$resized_image, 'public');
-
-        $resized_image_url = \Storage::url($resized_image_path);
-
-        $resized_urls = (array)$image->resized_urls;
-        array_set($resized_urls, "{$name}.url", $resized_image_url);
-        array_set($resized_urls, "{$name}.path", $resized_image_path);
-
-        $image->resized_urls = $resized_urls;
-
-        $image->save();
-
-        return redirect()->route('image.show', ['id' => $image->id]);
+        return redirect()->route('image.index')->with('status', 'Image Added!');
     }
 
     /**
@@ -83,31 +85,6 @@ class ImageController extends Controller
                 'image' => $image,
             ]
         );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Image $image
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Image $image)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Image               $image
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Image $image)
-    {
-        //
     }
 
     /**
