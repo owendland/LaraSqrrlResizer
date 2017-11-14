@@ -23,10 +23,12 @@ HELP_FUN = \
 help: ##@misc Show this help.
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-build: ##@workflow Build the artifact image
+.PHONY: build
+
+build: ##@workflow Build the artifact image and tag with latest
 	docker-compose build artifact
 
-push: ##@workflow Push the artifact image to Google Container Registry
+push: ##@workflow Push the latest artifact image to Google Container Registry
 	./build/push.sh
 
 deploy: ##@workflow image=[full image:tag] Deploy artifact image to Kubernetes
