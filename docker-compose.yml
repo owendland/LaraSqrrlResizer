@@ -35,7 +35,7 @@ services:
       - mysql
 
   artifact:
-    image: gcr.io/horizon-demo-185900/horizon-demo-app
+    image: gcr.io/horizon-demo-185900/lara-sqrrl-resizer
     build:
       context: .
 

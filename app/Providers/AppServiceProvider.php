@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Horizon::auth(
+            function () {
+                return true;
+            }
+        );
+
+        $slack_webhook = config('horizon.slack_webhook');
+        if (!empty($slack_webhook)) {
+            Horizon::routeSlackNotificationsTo($slack_webhook);
+        }
     }
 
     /**
@@ -24,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->app->environment() !== 'production' && $this->app->environment() !== 'stage') {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 }
