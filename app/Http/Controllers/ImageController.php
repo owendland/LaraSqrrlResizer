@@ -4,24 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubmitImageUrl;
 use App\Image;
-use App\Image\Repositories\ImageRepository;
-use Storage;
+use App\Jobs\DeleteImage;
+use App\Jobs\ProcessImage;
+use Faker\Generator;
 
 class ImageController extends Controller
 {
     /**
-     * @var \App\Image\Repositories\ImageRepository
+     * @var \Faker\Generator
      */
-    protected $repository;
+    protected $faker;
 
     /**
      * ImageController constructor.
      *
-     * @param \App\Image\Repositories\ImageRepository $repository
+     * @param \Faker\Generator $faker
      */
-    public function __construct(ImageRepository $repository)
+    public function __construct(Generator $faker)
     {
-        $this->repository = $repository;
+        $this->faker = $faker;
 
         $this->middleware('auth');
     }
@@ -33,7 +34,7 @@ class ImageController extends Controller
      */
     public function index()
     {
-        $images = Image::paginate(2);
+        $images = Image::paginate(5);
 
         return view(
             'image.index',
@@ -62,12 +63,21 @@ class ImageController extends Controller
      */
     public function store(SubmitImageUrl $request)
     {
-        $this->repository->persist(
-            $request->get('image_url'),
-            $request->get('name')
+        $name = $request->get('name');
+        if (is_null($name)) {
+            $name = $this->faker->name();
+        }
+
+        $image = Image::create(
+            [
+                'name'       => $name,
+                'source_url' => $request->get('image_url'),
+            ]
         );
 
-        return redirect()->route('image.index')->with('status', 'Image Added!');
+        ProcessImage::dispatch($image);
+
+        return redirect()->route('image.index')->with('status', 'Image Queued For Processing!');
     }
 
     /**
@@ -96,15 +106,8 @@ class ImageController extends Controller
      */
     public function destroy(Image $image)
     {
-        foreach ((array)$image->resized_urls as $resized_url) {
-            $path = array_get($resized_url, 'path');
-            if (Storage::exists($path)) {
-                Storage::delete($path);
-            }
-        }
+        DeleteImage::dispatch($image);
 
-        $image->delete();
-
-        return redirect()->route('image.index')->with('status', 'Image Deleted!');
+        return redirect()->route('image.index')->with('status', 'Image Queued For Deletion!');
     }
 }

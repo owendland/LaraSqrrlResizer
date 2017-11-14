@@ -4,7 +4,7 @@
     <div class="container">
         <div class="page-header">
             <h3>Current Squirrels
-                <small>Click to see all images</small>
+                <small>Click to see images</small>
             </h3>
         </div>
         <div class="row">
