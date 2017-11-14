@@ -4,7 +4,7 @@
     <div class="container">
         <div class="page-header">
             <h3>Current Squirrels
-                <small>Click to see images</small>
+                <small>Click to see all images</small>
             </h3>
         </div>
         <div class="row">
@@ -24,7 +24,7 @@
                                 @endif
                             </li>
                             <li>
-                                <span>Squirrel #{{ $image->id }}</span>
+                                <span>Squirrel #{{ $image->id }} - {{ $image->name }}</span>
                             </li>
                             <li class="pull-right text-right">
                                 <span class="">

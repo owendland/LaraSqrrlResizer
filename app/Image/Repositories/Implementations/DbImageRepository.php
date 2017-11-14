@@ -83,7 +83,7 @@ class DbImageRepository implements ImageRepository
         );
 
         $name          = 'thumbnail';
-        $resized_image = $this->image_manager->make($source_url)->resize(75, 75);
+        $resized_image = $this->image_manager->make($source_url)->resize(50, 50);
         $resized_image->encode('jpg');
 
         $resized_image_path = "public/{$image->id}/{$name}.jpg";
