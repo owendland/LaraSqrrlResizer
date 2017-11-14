@@ -45,7 +45,7 @@ if [ ${BRANCH} = "master" ]; then
 	DOCKER_TAG_STRING=${DOCKER_TAG}\|latest
 fi
 
-URL="https://console.cloud.google.com/kubernetes/images/tags/${APP}-service?location=US&project=${PROJECT}"
+URL="https://console.cloud.google.com/gcr/images/${PROJECT}/GLOBAL/${APP}?project=${PROJECT}"
 
 echo ""
 echo "New image pushed to container registry [${DOCKER_TAG_STRING}]"

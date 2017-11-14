@@ -1,12 +1,33 @@
-UNAME_S := $(shell uname -s)
+#COLORS
+GREEN  := $(shell tput -Txterm setaf 2)
+WHITE  := $(shell tput -Txterm setaf 7)
+YELLOW := $(shell tput -Txterm setaf 3)
+RESET  := $(shell tput -Txterm sgr0)
 
-.PHONY: build
+# Add the following 'help' target to your Makefile
+# And add help text after each target name starting with '\#\#'
+# A category can be added with @category
+HELP_FUN = \
+	%help; \
+	while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
+	print "Welcome to larasqrrl resizer!\n\n"; \
+	print "usage: make [target]\n\n"; \
+	for (sort keys %help) { \
+	print "${WHITE}$$_:${RESET}\n"; \
+	for (@{$$help{$$_}}) { \
+	$$sep = " " x (32 - length $$_->[0]); \
+	print "  ${YELLOW}$$_->[0]${RESET}$$sep${GREEN}$$_->[1]${RESET}\n"; \
+	}; \
+	print "\n"; }
 
-help:
-	@echo "Manages container build / deploy"
+help: ##@misc Show this help.
+	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
-build:
+build: ##@workflow Build the artifact image
 	docker-compose build artifact
 
-push:
+push: ##@workflow Push the artifact image to Google Container Registry
 	./build/push.sh
+
+deploy: ##@workflow image=[full image:tag] Deploy artifact image to Kubernetes
+	./build/deploy.sh $(image)
