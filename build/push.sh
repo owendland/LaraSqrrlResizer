@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-APP=horizon-demo-app
+APP=lara-sqrrl-resizer
 
 SOURCE=gcr.io
 PROJECT=horizon-demo-185900
