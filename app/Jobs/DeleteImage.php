@@ -36,6 +36,7 @@ class DeleteImage implements ShouldQueue
      */
     public function handle()
     {
+        // Delete all resized images for this image model
         foreach ((array)$this->image->resized_urls as $resized_url) {
             $path = array_get($resized_url, 'path');
             if (Storage::exists($path)) {
@@ -43,6 +44,12 @@ class DeleteImage implements ShouldQueue
             }
         }
 
+        // Delete the directory for this image id
+        if (Storage::exists("public/{$this->image->id}")) {
+            Storage::deleteDirectory("public/{$this->image->id}");
+        }
+
+        // Delete the image model
         $this->image->delete();
     }
 }

@@ -26,6 +26,7 @@ class SubmitImageUrl extends FormRequest
         return [
             'image_url' => 'required|url|between:1,255',
             'name'      => 'nullable|string|between:1,255',
+            'num_times' => 'nullable|integer',
         ];
     }
 }

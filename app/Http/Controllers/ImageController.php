@@ -6,6 +6,7 @@ use App\Http\Requests\SubmitImageUrl;
 use App\Image;
 use App\Jobs\DeleteImage;
 use App\Jobs\ProcessImage;
+use App\Jobs\ProcessImageMultipleTimes;
 use Faker\Generator;
 
 class ImageController extends Controller
@@ -63,7 +64,16 @@ class ImageController extends Controller
      */
     public function store(SubmitImageUrl $request)
     {
-        $name = $request->get('name');
+        $source_url = $request->get('image_url');
+        $num_times  = $request->get('num_times');
+        $name       = $request->get('name');
+
+        if ($num_times > 1) {
+            ProcessImageMultipleTimes::dispatch($source_url, $num_times. $name);
+
+            return redirect()->route('image.index')->with('status', 'Image Queued For Processing!');
+        }
+
         if (is_null($name)) {
             $name = $this->faker->name();
         }
@@ -71,7 +81,7 @@ class ImageController extends Controller
         $image = Image::create(
             [
                 'name'       => $name,
-                'source_url' => $request->get('image_url'),
+                'source_url' => $source_url,
             ]
         );
 

@@ -32,6 +32,21 @@
                                 </div>
                             </div>
 
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                <label for="num_times" class="col-md-4 control-label">Num Times</label>
+
+                                <div class="col-md-2">
+                                    <input id="num_times" class="form-control" name="num_times"
+                                           value="{{ old('num_times', 1) }}" required autofocus>
+
+                                    @if ($errors->has('num_times'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('num_times') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button class="btn btn-primary">
