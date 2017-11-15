@@ -25,6 +25,9 @@ help: ##@misc Show this help.
 
 .PHONY: build
 
+test: ##@workflow Run the tests
+	docker-compose exec cli bash -cl "vendor/bin/phpunit"
+
 build: ##@workflow Build the artifact image and tag with latest
 	docker-compose build artifact
 

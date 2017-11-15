@@ -18,7 +18,7 @@ class ProcessImage implements ShouldQueue
     /**
      * @var \App\Image
      */
-    protected $image;
+    public $image;
 
     /**
      * @var array
