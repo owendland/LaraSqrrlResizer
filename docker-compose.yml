@@ -14,9 +14,9 @@ services:
       - redis
       - mysql
 
-  worker:
+  cli:
     image: laradock/workspace:1.9-71
-    command: "php artisan horizon"
+    tty: true
     working_dir: /var/www/code
     volumes:
       - ./:/var/www/code
@@ -24,9 +24,9 @@ services:
       - redis
       - mysql
 
-  cli:
+  worker:
     image: laradock/workspace:1.9-71
-    tty: true
+    command: "php artisan horizon"
     working_dir: /var/www/code
     volumes:
       - ./:/var/www/code
