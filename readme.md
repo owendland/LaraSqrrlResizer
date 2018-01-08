@@ -4,12 +4,15 @@ An application for resizing images of squirrels
 
 ### Screenshots
 #### List squirrels
+___
 ![alt text](screenshots/screenshot3.png "Add image to resize")
 
 #### Add new squirrel to resize
+___
 ![alt text](screenshots/screenshot1.png "Add image to resize")
 
 #### View resized squirrel
+___
 ![alt text](screenshots/screenshot2.png "Add image to resize")
 
 ### Getting Setup
